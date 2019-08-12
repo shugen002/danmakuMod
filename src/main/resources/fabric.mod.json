@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "id": "danmaku_mod",
+  "version": "1.0.0",
+
+  "name": "Danmaku Mod",
+  "description": "破站直播弹幕接入，难道你不想直接在 Minecraft 里面看你直播间的人都说啥了吗？",
+  "authors": [
+    "Shugen(RootChannel)"
+  ],
+  "contact": {
+    "homepage": "https://space.bilibili.com/2304086"
+  },
+
+  "license": "MIT",
+  "icon": "assets/danmaku_mod/icon.png",
+
+  "environment": "client",
+  "entrypoints": {
+    "main": [
+      "space.shugen.danmaku.Main"
+    ],
+    "cotton-client-commands":[
+      "space.shugen.danmaku.CommandRegister"
+    ]
+  },
+
+  "depends": {
+    "fabricloader": ">=0.4.0",
+    "fabric": "*",
+    "cotton-client-commands": ">=0.4.2"
+  },
+  "suggests": {
+    "flamingo": "*"
+  }
+}
