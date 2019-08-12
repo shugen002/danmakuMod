@@ -1,16 +1,21 @@
-# Fabric Example Mod
+# Danmaku Mod
 
-## Setup
+## Dependence
 
-1. Edit build.gradle and mod.json to suit your needs.
-    * The "mixins" object can be removed from mod.json if you do not need to use mixins.
-    * Please replace all occurences of "modid" with your own mod ID - sometimes, a different string may also suffice.
-2. Run the following command:
+0. Fabric
 
-```
-./gradlew idea
-```
+1. Cotton Client Commands
+https://www.curseforge.com/minecraft/mc-mods/cotton-client-commands
 
-## License
+## Author say
 
-This template is available under the CC0 license. Feel free to learn from it and incorporate it in your own projects.
+这是一个光速开坑光速弃坑的Mod，原因：懒
+
+## feature
+
+显示破站直播弹幕啊
+
+## how to use
+
+/danmaku connect \[realRoomId\]
+/danmaku disconnect
