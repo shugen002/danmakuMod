@@ -18,4 +18,5 @@ https://www.curseforge.com/minecraft/mc-mods/cotton-client-commands
 ## how to use
 
 /danmaku connect \[realRoomId\]
+
 /danmaku disconnect
