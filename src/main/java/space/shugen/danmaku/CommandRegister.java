@@ -2,12 +2,14 @@ package space.shugen.danmaku;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
+import com.mojang.brigadier.arguments.StringArgumentType;
 import io.github.cottonmc.clientcommands.ArgumentBuilders;
 import io.github.cottonmc.clientcommands.ClientCommandPlugin;
 import io.github.cottonmc.clientcommands.CottonClientCommandSource;
 import net.minecraft.text.LiteralText;
 
 import static com.mojang.brigadier.arguments.IntegerArgumentType.integer;
+import static com.mojang.brigadier.arguments.StringArgumentType.greedyString;
 
 public class CommandRegister implements ClientCommandPlugin {
     public Main main;
@@ -30,6 +32,12 @@ public class CommandRegister implements ClientCommandPlugin {
                             main.disconnect();
                             return 1;
                         }))
+                .then(ArgumentBuilders.literal("send")
+                    .then(ArgumentBuilders.argument("content",greedyString())
+                            .executes(context -> {
+                                main.send(StringArgumentType.getString(context,"content"));
+                                return 1;
+                            })))
                 .executes(context -> {
                     context.getSource().sendFeedback(new LiteralText("你想干啥？"));
                     return 1;

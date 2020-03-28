@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "danmaku_mod",
-  "version": "1.0.0",
+  "version": "1.0.1",
 
   "name": "Danmaku Mod",
   "description": "破站直播弹幕接入，难道你不想直接在 Minecraft 里面看你直播间的人都说啥了吗？",
@@ -26,11 +26,12 @@
   },
 
   "depends": {
-    "fabricloader": ">=0.4.0",
+    "fabricloader": ">=0.7.8",
     "fabric": "*",
-    "cotton-client-commands": ">=0.4.2"
+    "cotton-client-commands": ">=1.0.0",
+    "modmenu": "*"
   },
-  "suggests": {
-    "flamingo": "*"
+  "custom": {
+    "modmenu:clientsideOnly": true
   }
 }

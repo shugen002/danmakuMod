@@ -3,9 +3,15 @@ package space.shugen.danmaku;
 import com.google.gson.*;
 import io.github.cottonmc.clientcommands.CottonClientCommandSource;
 import net.fabricmc.api.ModInitializer;
+import net.minecraft.MinecraftVersion;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.text.*;
+import org.apache.http.Header;
+import org.apache.http.HttpConnection;
+import org.apache.http.client.HttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.message.BasicHeader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.java_websocket.client.WebSocketClient;
@@ -15,38 +21,33 @@ import java.net.URI;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import static space.shugen.danmaku.GoIMConsts.*;
+
 public class Main implements ModInitializer {
+	public static String MOD_ID="danmaku_mod";
 	public static Main self;
 	private WebSocketClient webSocketClient;
 	public Logger logger;
-	public String astring="a";
-	public CottonClientCommandSource source;
-	public static final short WS_HEADER_LENGTH = 16;
-	public static final int WS_PACKAGE_OFFSET = 0;
-	public static final int WS_HEADER_OFFSET = 4;
-	public static final int WS_VERSION_OFFSET = 6;
-	public static final int WS_OPERATION_OFFSET = 8;
-	public static final int WS_SEQUENCE_OFFSET = 12;
-	public static final short WS_VERSION = 1;
-	public static final int WS_OP_HEARTBEAT = 2;
-	public static final int WS_OP_HEARTBEAT_REPLY = 3;
-	public static final int WS_OP_MESSAGE = 5;
-	public static final int WS_OP_USER_AUTHENTICATION = 7;
-	public static final int WS_OP_CONNECT_SUCCESS = 8;
 	private Timer timer;
+	private HttpClient httpClient;
+	public static final Gson GSON = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).setPrettyPrinting().create();
 	@Override
 	public void onInitialize() {
 		self=this;
 		logger= LogManager.getLogger("Danmaku Mod");
 		logger.info("Danmaku Mod Loaded");
+		ConfigManager.initializeConfig();
 		timer = new Timer();
-
-	}
-	public String getText(){
-		return astring;
+		List<Header> headers= new ArrayList();
+		headers.add(new BasicHeader("Cookie",""));
+		httpClient= HttpClientBuilder.create()
+				.setUserAgent("Minecraft "+ MinecraftClient.getInstance().getGameVersion())
+				.setDefaultHeaders(headers)
+				.build();
 	}
 	public void Connect(int roomId){
 		disconnect();
@@ -54,7 +55,7 @@ public class Main implements ModInitializer {
 			@Override
 			public void onOpen(ServerHandshake handshakedata) {
 				logger.info("WebSocket Connected . Authing ..");
-				astring="WebSocket Connected . Authing ..";
+
 				MinecraftClient.getInstance().player.sendMessage( new LiteralText("WebSocket Connected . Authing .."));
 				String token="{\"uid\":"+ Math.round(Math.random()*1000000)+",\"roomid\":"+roomId+"}";
 				this.send(encode(WS_OP_USER_AUTHENTICATION,token.getBytes()).array());
@@ -132,13 +133,11 @@ public class Main implements ModInitializer {
 
 			@Override
 			public void onClose(int code, String reason, boolean remote) {
-				astring="close";
 				getPlayer().sendMessage(new LiteralText("WebSocket Close with Code "+ code +" . Reason : "+ reason));
 			}
 
 			@Override
 			public void onError(Exception ex) {
-				astring="error";
 				getPlayer().sendMessage(new LiteralText("Error : " + ex.getLocalizedMessage()));
 				ex.printStackTrace();
 			}
@@ -179,7 +178,6 @@ public class Main implements ModInitializer {
 		return packets;
 	}
 	public static Main getIt(){
-
 		return self;
 	}
 	public JsonObject simpleText(String text){
@@ -189,5 +187,12 @@ public class Main implements ModInitializer {
 	}
 	private ClientPlayerEntity getPlayer(){
 		return MinecraftClient.getInstance().player;
+	}
+
+	public void send(String content) {
+		Thread sendThread = new Thread(()->{
+
+		},"Danmaku Send Thread");
+		sendThread.start();
 	}
 }
